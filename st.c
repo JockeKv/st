@@ -1602,9 +1602,13 @@ csihandle(void)
 	switch (csiescseq.mode[0]) {
 	default:
 	unknown:
-		fprintf(stderr, "erresc: unknown csi ");
-		csidump();
+/*
+ * FIXME: Printing errors crashes st in bspwm
+  fprintf(stderr, "erresc: unknown csi ");
+  csidump();
+*/
 		/* die(""); */
+
 		break;
 	case '@': /* ICH -- Insert <n> blank char */
 		DEFAULT(csiescseq.arg[0], 1);
@@ -1955,8 +1959,11 @@ strhandle(void)
 		return;
 	}
 
+/*
+ * FIXME: Printing errors crashes st in bspwm
 	fprintf(stderr, "erresc: unknown str ");
 	strdump();
+*/
 }
 
 void
@@ -2640,7 +2647,8 @@ draw(void)
 
 	drawregion(0, 0, term.col, term.row);
 	xdrawcursor(cx, term.c.y, term.line[term.c.y][cx],
-			term.ocx, term.ocy, term.line[term.ocy][term.ocx]);
+			term.ocx, term.ocy, term.line[term.ocy][term.ocx],
+			term.line[term.ocy], term.col);
 	term.ocx = cx;
 	term.ocy = term.c.y;
 	xfinishdraw();
